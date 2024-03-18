@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import de.jensd.fx.glyphs.fontawesome.FontAwesomeIconView?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
+<?import javafx.scene.text.Text?>
+
+<?import javafx.scene.control.Button?>
+<VBox alignment="CENTER" fillWidth="false" onMouseClicked="#addBook" style="-fx-background-color: #d9d9d9; -fx-background-radius: 10;" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.librarygui.controllers.BookView">
+   <children>
+      <FontAwesomeIconView fill="#27506e" glyphName="BOOK" scaleX="4.0" scaleY="4.0">
+         <VBox.margin>
+            <Insets top="20.0" />
+         </VBox.margin>
+      </FontAwesomeIconView>
+      <Text fx:id="titleText" strokeType="OUTSIDE" strokeWidth="0.0" text="TITLE">
+         <VBox.margin>
+            <Insets left="20.0" right="20.0" top="30.0" />
+         </VBox.margin>
+         <font>
+            <Font size="16.0" />
+         </font>
+      </Text>
+      <Text fx:id="authorText" strokeType="OUTSIDE" strokeWidth="0.0" style="-fx-font-style: italic;" text="Author" />
+      <Text fx:id="categoryText" opacity="0.5" strokeType="OUTSIDE" strokeWidth="0.0" style="-fx-font-style: italic;" text="Category">
+         <VBox.margin>
+            <Insets top="5.0" />
+         </VBox.margin>
+      </Text>
+      <Text fx:id="publisherText" strokeType="OUTSIDE" strokeWidth="0.0" text="Publisher">
+         <VBox.margin>
+            <Insets top="20.0" />
+         </VBox.margin>
+      </Text>
+      <Text fx:id="yearText" strokeType="OUTSIDE" strokeWidth="0.0" text="Year">
+         <VBox.margin>
+            <Insets bottom="5.0" />
+         </VBox.margin>
+      </Text>
+      <Text fx:id="isbnText" strokeType="OUTSIDE" strokeWidth="0.0" style="-fx-font-style: italic;" text="ISBN" textAlignment="CENTER">
+         <font>
+            <Font size="8.0" />
+         </font>
+         <VBox.margin>
+            <Insets bottom="10.0" />
+         </VBox.margin>
+      </Text>
+      <FontAwesomeIconView fill="#27506e" glyphName="INFO" scaleX="1.0" scaleY="1.0" >
+         <VBox.margin>
+            <Insets top="10.0" />
+            <Insets bottom="20.0" />
+         </VBox.margin>
+      </FontAwesomeIconView>
+      <Button fx:id="lendButton" mnemonicParsing="false" style="-fx-background-color: green;" text="Get" textFill="#d9d9d9" onMouseClicked="#lendBook">
+      <VBox.margin>
+         <Insets top="10.0" />
+         <Insets bottom="20.0" />
+      </VBox.margin>
+        </Button>
+   </children>
+</VBox>

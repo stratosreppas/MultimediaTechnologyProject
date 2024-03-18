@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import de.jensd.fx.glyphs.fontawesome.FontAwesomeIconView?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
+<?import javafx.scene.text.Text?>
+
+<VBox fx:controller="com.example.librarygui.controllers.UserView" alignment="CENTER" onMouseClicked="#addUser" style="-fx-background-color: #d9d9d9; -fx-background-radius: 10;" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1">
+    <children>
+        <FontAwesomeIconView fill="#27506e" glyphName="USER" scaleX="4.0" scaleY="4.0">
+            <VBox.margin>
+                <Insets top="20.0" />
+            </VBox.margin>
+        </FontAwesomeIconView>
+        <Text fx:id="usernameText" strokeType="OUTSIDE" strokeWidth="0.0" text="TITLE">
+            <VBox.margin>
+                <Insets left="20.0" right="20.0" top="30.0" />
+            </VBox.margin>
+            <font>
+                <Font size="16.0" />
+            </font>
+        </Text>
+        <Text strokeType="OUTSIDE" fx:id="firstnameText" strokeWidth="0.0" style="-fx-font-style: italic;" text="Author" />
+        <Text opacity="0.5" strokeType="OUTSIDE" fx:id="lastnameText" strokeWidth="0.0" style="-fx-font-style: italic;" text="Category">
+            <VBox.margin>
+                <Insets top="5.0" />
+            </VBox.margin>
+        </Text>
+        <Text strokeType="OUTSIDE" strokeWidth="0.0" fx:id="emailText" text="Publisher">
+            <VBox.margin>
+                <Insets top="20.0" />
+            </VBox.margin>
+        </Text>
+        <Text strokeType="OUTSIDE" strokeWidth="0.0" style="-fx-font-style: italic;" fx:id="adtText" text="ISBN" textAlignment="CENTER">
+            <font>
+                <Font size="8.0" />
+            </font>
+            <VBox.margin>
+                <Insets bottom="10.0" />
+            </VBox.margin>
+        </Text>
+    </children>
+</VBox>

@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import de.jensd.fx.glyphs.fontawesome.*?>
+<?import javafx.geometry.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.effect.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.paint.*?>
+<?import javafx.scene.text.*?>
+
+<HBox alignment="CENTER" prefHeight="100.0" spacing="5.0" style="-fx-background-color: #27506e; -fx-background-radius: 10 10 10 10;" xmlns="http://javafx.com/javafx/17.0.2-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.librarygui.controllers.LoanView" onMouseClicked="#returnBook">
+        <children>
+            <StackPane>
+                <children>
+                    <FontAwesomeIconView fill="#d9d9d9" glyphName="BOOK" size="50">
+                        <StackPane.margin>
+                            <Insets />
+                        </StackPane.margin>
+                        <effect>
+                            <DropShadow blurType="GAUSSIAN" height="19.05" radius="13.892500000000002" width="38.52">
+                                <color>
+                                    <Color red="0.10526315867900848" green="0.10526315867900848" blue="0.10526315867900848" />
+                                </color>
+                            </DropShadow>
+                        </effect>
+                    </FontAwesomeIconView>
+                </children>
+                <HBox.margin>
+                    <Insets bottom="10.0" left="10.0" top="10.0" />
+                </HBox.margin>
+            </StackPane>
+            <StackPane HBox.hgrow="ALWAYS">
+                <children>
+                    <VBox fillWidth="false">
+                        <children>
+                            <Label fx:id="titleLabel" textFill="#d9d9d9" wrapText="true">
+                                <VBox.margin>
+                                    <Insets top="10.0" />
+                                </VBox.margin>
+                                <font>
+                                    <Font size="16.0" />
+                                </font>
+                            </Label>
+                            <Label style="-fx-font-style: italic;" fx:id="isbnLabel" textFill="#d9d9d9" wrapText="true" />
+                        </children>
+                        <StackPane.margin>
+                            <Insets left="20.0" />
+                        </StackPane.margin>
+                    </VBox>
+                </children>
+            </StackPane>
+      <StackPane opacity="0.8" style="-fx-background-color: #d9d9d9; -fx-background-radius: 10 10 10 10;">
+         <children>
+            <VBox>
+               <children>
+                  <Text fill="#27506e" strokeType="OUTSIDE" strokeWidth="0.0" text="From:">
+                     <VBox.margin>
+                        <Insets left="5.0" top="5.0" />
+                     </VBox.margin>
+                  </Text>
+                  <Text fill="#27596e" strokeType="OUTSIDE" strokeWidth="0.0" style="-fx-font-weight: bold;" fx:id="loanDateText" textAlignment="CENTER" wrappingWidth="50.0">
+                     <font>
+                        <Font size="16.0" />
+                     </font>
+                  </Text>
+               </children>
+            </VBox>
+         </children>
+         <opaqueInsets>
+            <Insets />
+         </opaqueInsets>
+         <HBox.margin>
+            <Insets bottom="20.0" top="20.0" />
+         </HBox.margin>
+      </StackPane>
+            <StackPane style="-fx-background-color: #d9d9d9; -fx-background-radius: 10 10 10 10;">
+                <children>
+                    <VBox>
+                        <children>
+                            <Text fill="#27506e" strokeType="OUTSIDE" strokeWidth="0.0" text="Until:">
+                                <VBox.margin>
+                                    <Insets left="5.0" top="5.0" />
+                                </VBox.margin>
+                            </Text>
+                            <Text fill="#27596e" strokeType="OUTSIDE" strokeWidth="0.0" style="-fx-font-weight: bold;" fx:id="returnDateText" textAlignment="CENTER" wrappingWidth="50.0">
+                                <font>
+                                    <Font size="16.0" />
+                                </font>
+                            </Text>
+                        </children>
+                    </VBox>
+                </children>
+                <opaqueInsets>
+                    <Insets />
+                </opaqueInsets>
+                <HBox.margin>
+                    <Insets bottom="20.0" left="10.0" right="10.0" top="20.0" />
+                </HBox.margin>
+            </StackPane>
+            <StackPane onMouseClicked="#rateBook">
+                <children>
+                    <VBox alignment="CENTER" fx:id="rateVBox">
+                        <children>
+                            <FontAwesomeIconView fill="#c3c35c" glyphName="STAR" fx:id=""/>
+                            <Label text="Rate this!" textFill="#d9d9d9" fx:id="rateLabel"/>
+                        </children>
+                        <StackPane.margin>
+                            <Insets right="10.0" />
+                        </StackPane.margin>
+                    </VBox>
+                </children>
+            </StackPane>
+        </children>
+        <VBox.margin>
+            <Insets left="20.0" right="20.0" top="20.0" />
+        </VBox.margin>
+    </HBox>
