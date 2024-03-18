@@ -38,6 +38,10 @@ public class Category {
             return null;
         }
 
+        public void removeCategory(String category) {
+
+        }
+
     }
 
 }

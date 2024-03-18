@@ -32,10 +32,18 @@ public class AddBookPage extends Controller {
     private ComboBox<String> comboBox;
 
     public void init() {
+
+        //load the combo box from categories names
+        comboBox.getItems().clear();
+        for(int i = 0; i < library.categories.size(); i++)
+            comboBox.getItems().add(library.categories.get(i).name);
+
         if (highlightedObject != null){
             titleText.setText("Edit Book");
 
             this.book = (Book) highlightedObject;
+
+            comboBox.setValue(book.category);
 
             titleField.setText(book.title);
             titleField.setPromptText(book.title);
@@ -60,6 +68,8 @@ public class AddBookPage extends Controller {
             titleText.setText("Add Book");
 
             deleteButton.setDisable(true);
+
+            comboBox.setPromptText("Category");
 
             titleField.setPromptText("Title");
             authorField.setPromptText("Author");

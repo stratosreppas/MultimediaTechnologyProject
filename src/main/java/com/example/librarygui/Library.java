@@ -144,18 +144,30 @@ public class Library {
     }
 
     public List<Category> loadCategories() {
-        // Φόρτωση των κατηγοριών από το αρχείο
-          List<Category> categories = new ArrayList<>();
-            String[] category_names = FileIO.readMultipleStrings("medialab/categories/$$contents.bin");
-            if (category_names == null) return null;
-            if (category_names[0].isEmpty()) return null;
-            for (String category_name : category_names) {
-                String[] category_info = FileIO.readMultipleStrings("medialab/categories/" + category_name + ".bin");
-                categories.add(new Category(
-                        category_name,
-                        Arrays.stream(category_info).toList()
-                ));
+        List<Category> categories = new ArrayList<>();
+        File categoryDirectory = new File("medialab/categories/");
+        // Check if the directory exists
+        if (!categoryDirectory.exists() || !categoryDirectory.isDirectory()) {
+            System.err.println("Category directory not found or is not a directory.");
+            return categories;
+        }
+        // Get list of files in the directory
+        File[] categoryFiles = categoryDirectory.listFiles();
+        // Iterate over the files and load user information
+        if (categoryFiles != null) {
+            for (File file : categoryFiles) {
+                if (file.isFile()) {
+                    String fileName = file.getName();
+                    if (fileName.endsWith(".bin")) {
+                        String[] category_info = FileIO.readMultipleStrings(file.getAbsolutePath());
+                        categories.add(new Category(
+                                fileName.substring(0, fileName.length() - 4),
+                                Arrays.asList(category_info)
+                        ));
+                    }
+                }
             }
+        }
             return categories;
     }
 
