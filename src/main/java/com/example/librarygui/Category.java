@@ -27,21 +27,19 @@ public class Category {
         FileIO.writeMultipleStrings(path+name+".bin", this.ISBNs.toArray(new String[0]));
     }
 
-    public String getBooksCategory(String isbn){
+    public String getBooksCategory(String isbn) {
         // Searches if the book's isbn exists in the List in this category
         // If it does, return the category name
         // If it doesn't, return null
-        if(ISBNs.contains(isbn)){
+        if (ISBNs.contains(isbn)) {
             return name;
-        }
-        else {
+        } else {
             return null;
         }
+    }
 
         public void removeCategory(String category) {
 
         }
 
     }
-
-}
