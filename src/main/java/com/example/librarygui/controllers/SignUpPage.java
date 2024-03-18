@@ -135,7 +135,7 @@ public class SignUpPage extends Controller{
                 Main.loadFXML("admin_main_page.fxml");
             }
             else {
-                library.addUser(username, password, firstName, lastName, adt, email);
+                library.addUser(new User(username, password, firstName, lastName, adt, email));
 
                 Banner.showInformationDialog("Success", "User created successfully");
                 Main.loadFXML("login_page.fxml");
@@ -144,7 +144,7 @@ public class SignUpPage extends Controller{
 
         @FXML
         public void delete(ActionEvent event) throws Exception {
-            library.removeUser(user.username);
+            library.removeUser(user);
             Banner.showInformationDialog("Success", "User deleted successfully");
             Main.loadFXML("admin_main_page.fxml");
         }

@@ -18,18 +18,12 @@ public class AddBookPage extends Controller {
     public Button deleteButton;
     public TextField titleField;
     public TextField authorField;
-    public TextField categoryField;
+    @FXML
+    private ComboBox<String> comboBox;
     public TextField yearField;
     public TextField isbnField;
     public TextField publisherField;
     public TextField copiesField;
-
-    public Book editBook(String title, String author, String category, String year, String isbn, String publisher, String copies, String rating) {
-        return new Book(title, author, category, year, isbn, publisher, copies, rating);
-    }
-
-    @FXML
-    private ComboBox<String> comboBox;
 
     public void init() {
 
@@ -43,7 +37,7 @@ public class AddBookPage extends Controller {
 
             this.book = (Book) highlightedObject;
 
-            comboBox.setValue(book.category);
+            comboBox.setValue(library.getBooksCategory(book));
 
             titleField.setText(book.title);
             titleField.setPromptText(book.title);
@@ -78,11 +72,6 @@ public class AddBookPage extends Controller {
             publisherField.setPromptText("Publisher");
             copiesField.setPromptText("Copies");
         }
-
-        if (library.categories != null)
-            for (Category category : library.categories) {
-                comboBox.getItems().add(category.name);
-            }
     }
 
         @FXML
@@ -94,6 +83,12 @@ public class AddBookPage extends Controller {
             String isbn = isbnField.getText();
             String publisher = publisherField.getText();
             String copies = copiesField.getText();
+            String category = comboBox.getValue();
+
+            if (title.equals("") || author.equals("") || year.equals("") || isbn.equals("") || publisher.equals("") || copies.equals("")) {
+                Banner.showErrorBanner("Error", "Please fill in all fields");
+                return;
+            }
 
         if(highlightedObject != null) {
             String prev_title = book.title;
@@ -102,64 +97,37 @@ public class AddBookPage extends Controller {
             String prev_isbn = book.isbn;
             String prev_publisher = book.publisher;
             String prev_copies = book.copies;
+            String prev_category = library.getBooksCategory(book);
 
 
-            if (title.equals("") || author.equals("") || year.equals("") || isbn.equals("") || publisher.equals("") || copies.equals("")) {
-                Banner.showErrorBanner("Error", "Please fill in all fields");
-                return;
-            }
-            if (!title.equals(prev_title) && library.bookExists(title)) {
+            if (!isbn.equals(prev_isbn) && library.bookExists(isbn)) {
                 Banner.showErrorBanner("Error", "Book already exists");
                 return;
             }
             else {
-                if (!title.equals(prev_title)) {
                     book.title = title;
-                    Banner.showInformationDialog("Success", "Book Title will be edited to: '" + title + "'");
-                }
-
-                if (!author.equals(prev_author)) {
                     book.author = author;
-                    Banner.showInformationDialog("Success", "Book Author will be edited to: '" + author + "'");
-                }
-
-                if (!year.equals(prev_year)) {
                     book.year = year;
-                    Banner.showInformationDialog("Success", "Book Year will be edited to: '" + year + "'");
-                }
-
-                if (!isbn.equals(prev_isbn)) {
                     book.isbn = isbn;
-                    Banner.showInformationDialog("Success", "Book ISBN will be edited to: '" + isbn + "'");
-                }
-
-                if (!publisher.equals(prev_publisher)) {
                     book.publisher = publisher;
-                    Banner.showInformationDialog("Success", "Book Publisher will be edited to: '" + publisher + "'");
-                }
-
-                if (!copies.equals(prev_copies)) {
                     book.copies = copies;
-                    Banner.showInformationDialog("Success", "Book Copies will be edited to: '" + copies + "'");
+                    library.removeBookFromCategory(prev_category, prev_isbn);
+                    library.addBookToCategory(category, isbn);
                 }
 
-                library.editBook(prev_title, title, author, year, isbn, publisher, copies);
+                library.editBook(prev_isbn, title, author, year, isbn, publisher, copies);
                 Banner.showInformationDialog("Success", "Book '" + title + "' edited successfully");
             }
-        }
 
-        else{
-            if (title.equals("") || author.equals("") || year.equals("") || isbn.equals("") || publisher.equals("") || copies.equals("")) {
-                Banner.showErrorBanner("Error", "Please fill in all fields");
-                return;
-            }
+        else {
             if (library.bookExists(title)) {
                 Banner.showErrorBanner("Error", "Book already exists");
                 return;
             }
             else {
-                book = new Book(title, author, year, isbn, publisher, copies,"0", "sex");
+                book = new Book(title, author, year, isbn, publisher, copies,"0");
                 library.addBook(book);
+                library.addBookToCategory(category, isbn);
                 Banner.showInformationDialog("Success", "Book '" + title + "' added successfully");
             }
         }
@@ -168,7 +136,7 @@ public class AddBookPage extends Controller {
         }
 
         public void deleteBook(ActionEvent event) throws Exception {
-            if (library.removeBook(book.title)) {
+            if (library.removeBook(book)) {
                 Banner.showInformationDialog("Success", "Book deleted successfully");
                 Main.loadFXML("user_main_page.fxml");
             }

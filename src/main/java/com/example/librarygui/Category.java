@@ -2,44 +2,46 @@ package com.example.librarygui;
 
 import com.example.librarygui.interfaces.FileIO;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class Category {
 
     private String path = "medialab/categories/";
     public String name;
-    public List<String> ISBNs;
+    public List<String> isbns;
 
-    public Category(String name, List<String> ISBNs) {
+    public Category(String name, List<String> isbns) {
         this.name = name;
-        this.ISBNs = ISBNs;
+        this.isbns = isbns;
     }
 
-    public List<String> getISBNs() {
-        return this.ISBNs;
+    public Category(String name) {
+        this.name = name;
+        this.isbns = new ArrayList<>();
+    }
+
+    public List<String> getIsbns() {
+        return this.isbns;
     }
 
     public void addISBN(String ISBN) {
-        this.ISBNs.add(ISBN);
+        this.isbns.add(ISBN);
     }
 
     public void saveCategory() {
-        FileIO.writeMultipleStrings(path+name+".bin", this.ISBNs.toArray(new String[0]));
+        FileIO.writeMultipleStrings(path+name+".bin", this.isbns.toArray(new String[0]));
     }
 
     public String getBooksCategory(String isbn) {
         // Searches if the book's isbn exists in the List in this category
         // If it does, return the category name
         // If it doesn't, return null
-        if (ISBNs.contains(isbn)) {
+        if (isbns.contains(isbn)) {
             return name;
         } else {
             return null;
         }
     }
-
-        public void removeCategory(String category) {
-
-        }
 
     }

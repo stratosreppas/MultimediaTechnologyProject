@@ -12,8 +12,8 @@ public class Library {
     public List<Book> books;
     public List<User> users;
     public List<Admin> admins;
-    public List<Loan> loans = null;
-    public static List<Category> categories;
+    public List<Loan> loans;
+    public List<Category> categories;
     public User loggedUser;
 
     public Library() {
@@ -51,8 +51,7 @@ public class Library {
                                 book_info[3],
                                 book_info[4],
                                 book_info[5],
-                                book_info[6],
-                                book_info[7]
+                                book_info[6]
                         ));
                     }
                 }
@@ -160,10 +159,16 @@ public class Library {
                     String fileName = file.getName();
                     if (fileName.endsWith(".bin")) {
                         String[] category_info = FileIO.readMultipleStrings(file.getAbsolutePath());
-                        categories.add(new Category(
+                        if(category_info!= null)
+                            if(category_info[0]!="")
+                                categories.add(new Category(
                                 fileName.substring(0, fileName.length() - 4),
-                                Arrays.asList(category_info)
-                        ));
+                                        new ArrayList<>(Arrays.asList(category_info))
+                                ));
+                        else
+                                categories.add(new Category(
+                                        fileName.substring(0, fileName.length() - 4)
+                                ));
                     }
                 }
             }
@@ -201,23 +206,6 @@ public class Library {
         return loans;
     }
 
-    public void loadTransactions() {
-        // Φόρτωση των συναλλαγών από το αρχείο
-    }
-
-
-    public List<Book> getBooks() {
-        return books;
-    }
-
-    public List<User> getUsers() {
-        return users;
-    }
-
-    public static List<Category> getCategories() {
-        return categories;
-    }
-
     public void saveBooks() {
         FileIO.format_directory("medialab/books");
         if (books == null) return;
@@ -225,7 +213,6 @@ public class Library {
             FileIO.writeMultipleStrings("medialab/books/"+ book.title + ".bin", new String[]{
                     book.title,
                     book.author,
-                    book.category,
                     book.isbn,
                     book.publisher,
                     book.year,
@@ -282,13 +269,8 @@ public class Library {
         if (categories == null) return;
         // Αποθήκευση των κατηγοριών στο αρχείο
         for (Category category : categories) {
-            FileIO.writeMultipleStrings("medialab/categories/" + category.name + ".bin", category.ISBNs.toArray(new String[0]));
+            FileIO.writeMultipleStrings("medialab/categories/" + category.name + ".bin", category.isbns.toArray(new String[0]));
         }
-    }
-
-    public void saveTransactions() {
-        // Αποθήκευση των συναλλαγών στο αρχείο
-
     }
 
     public boolean userExists(String username) {
@@ -301,60 +283,111 @@ public class Library {
         return false;
     }
 
-    public boolean bookExists(String title) {
+    public boolean bookExists(String isbn) {
         if(books != null)
             for (Book book : books) {
-                if (book.title.equals(title)) {
+                if (book.isbn.equals(isbn)) {
                     return true;
                 }
             }
         return false;
     }
 
-    public void addUser(String username, String password, String firstName, String lastName, String adt, String email) {
-        users.add(new User(username, password, firstName, lastName, adt, email));
+    public boolean categoryExists(String name) {
+        if(categories != null)
+            for (Category category : categories) {
+                if (category.name.equals(name)) {
+                    return true;
+                }
+            }
+        return false;
+    }
+
+    public void addUser(User user) {
+        users.add(user);
     }
 
     public void addBook(Book book) {
         if(books==null) books = new ArrayList<>();
-        books.add(new Book(book.title, book.author, book.isbn, "", book.year, book.publisher, book.copies, "0"));
+        books.add(book);
     }
 
-    public boolean removeBook(String title) {
-        if (books != null)
-            for (Book book : books) {
-                if (book.title.equals(title)) {
-                    books.remove(book);
-                    return true;
+    public void addCategory(String name) {
+        if(categories==null) categories = new ArrayList<>();
+        categories.add(new Category(name));
+    }
+
+    public void addLoan(Loan loan) {
+        if(loans==null) loans = new ArrayList<>();
+        loans.add(loan);
+    }
+
+    public boolean removeBook(Book book) {
+        if (books != null){
+
+            books.remove(book);
+
+            for (Loan loan : loans) {
+                if (loan.book.isbn.equals(book.isbn)) {
+                    removeLoan(loan);
                 }
             }
+
+            return true;
+        }
         return false;
     }
 
-    public boolean removeUser(String username) {
+    public boolean removeUser(User user) {
             if (users != null) {
-                for (Admin admin : admins) {
-                    if (admin.username.equals(username)) {
-                        admins.remove(admin);
+
+                users.remove(user);
+
+                for (Admin a : admins) {
+                    if (a.username.equals(user.username)) {
+                        admins.remove(a);
                     }
                 }
-                for (User user : users) {
-                    if (user.username.equals(username)) {
-                        users.remove(user);
-                        return true;
+                for (Loan loan : loans) {
+                    if (loan.user.username.equals(user.username)) {
+                        removeLoan(loan);
                     }
                 }
+                return true;
             }
             return false;
         }
 
-    public void editBook(String prev_title, String title, String author, String year, String isbn, String publisher, String copies) {
+        public boolean removeCategory(Category category) {
+            if (categories != null) {
+                categories.remove(category);
+                //also deletes all the books associated with this category
+
+                if(books != null)
+                    for(Book book : books){
+                        if(category.isbns.contains(book.isbn)){
+                            removeBook(book);
+                        }
+                    }
+                return true;
+            }
+            return false;
+        }
+
+        public boolean removeLoan(Loan loan) {
+            if (loans != null) {
+                loans.remove(loan);
+                return true;
+            }
+            return false;
+        }
+
+    public void editBook(String prev_isbn, String title, String author, String year, String isbn, String publisher, String copies) {
         if(books != null)
             for (Book book : books) {
-                if (book.title.equals(prev_title)) {
+                if (book.isbn.equals(prev_isbn)) {
                     book.title = title;
                     book.author = author;
-                    book.category = null;
                     book.year = year;
                     book.isbn = isbn;
                     book.publisher = publisher;
@@ -379,6 +412,18 @@ public class Library {
                 }
             }
         Banner.showErrorBanner("Error", "User to edit not found");
+    }
+
+    public boolean editCategory(String prev_name, String name) {
+        if(categories != null)
+            for (Category category : categories) {
+                if (category.name.equals(prev_name)) {
+                    category.name = name;
+                    return true;
+                }
+            }
+        Banner.showErrorBanner("Error", "Category to edit not found");
+        return false;
     }
 
     public List<Book> searchBooks(String query) {
@@ -412,6 +457,38 @@ public class Library {
                 }
             }
         return results;
+    }
+
+    public void addBookToCategory(String category, String isbn) {
+        if(categories != null)
+            for (Category c : categories) {
+                if (c.name.equals(category)) {
+                    c.addISBN(isbn);
+                    return;
+                }
+            }
+    }
+
+    public void removeBookFromCategory(String category, String isbn) {
+        if(categories != null)
+            for (Category c : categories) {
+                if (c.name.equals(category)) {
+                    c.isbns.remove(isbn);
+                    return;
+                }
+            }
+    }
+
+    public String getBooksCategory(Book book) {
+        // Searches if the book's isbn exists in the List in this category
+        // If it does, return the category name
+        // If it doesn't, return null
+        for (Category category : categories) {
+            if (category.isbns.contains(book.isbn)) {
+                return category.name;
+            }
+        }
+        return null;
     }
 
     public List<Book> sortBooks(String criteria, String order) {

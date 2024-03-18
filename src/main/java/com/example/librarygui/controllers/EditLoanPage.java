@@ -21,7 +21,7 @@ public class EditLoanPage extends Controller {
     public TextField copiesField;
 
     public Book editBook(String title, String author, String category, String year, String isbn, String publisher, String copies, String rating) {
-        return new Book(title, author, category, year, isbn, publisher, copies, rating);
+        return new Book(title, author, year, isbn, publisher, copies, rating);
     }
 
     @FXML
@@ -91,13 +91,13 @@ public class EditLoanPage extends Controller {
                     Banner.showInformationDialog("Success", "Book Copies will be edited to: " + copies + "'");
                 }
 
-                library.editBook(prev_title, title, author, year, isbn, publisher, copies);
+                library.editBook(prev_isbn, title, author, year, isbn, publisher, copies);
                 Main.loadFXML("user_main_page.fxml");
             }
         }
 
         public void deleteBook(ActionEvent event) throws Exception {
-            if (library.removeBook(book.title)) {
+            if (library.removeBook(book)) {
                 Banner.showInformationDialog("Success", "Book deleted successfully");
                 Main.loadFXML("user_main_page.fxml");
             }

@@ -94,7 +94,7 @@ public void init() {
     }
 
     public void deleteUser(ActionEvent event) throws Exception {
-        if (library.removeUser(user.username)) {
+        if (library.removeUser(user)) {
             Banner.showInformationDialog("Success", "User deleted successfully");
             Main.loadFXML("user_main_page.fxml");
         }

@@ -1,9 +1,6 @@
 package com.example.librarygui.controllers;
 
-import com.example.librarygui.Book;
-import com.example.librarygui.Loan;
-import com.example.librarygui.Main;
-import com.example.librarygui.User;
+import com.example.librarygui.*;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
@@ -25,7 +22,7 @@ public class MainPageController extends Controller {
     public TilePane BookTilePane;
     public TilePane UserTilePane;
     public VBox LoanVBox;
-    public TilePane CategoryTilePane;
+    public VBox CategoryVBox;
 
     public void displayUsers(List<User> users) {
         if (users == null) return;
@@ -51,6 +48,15 @@ public class MainPageController extends Controller {
             Parent loanItem = Main.loadItem("loan_view.fxml", loan);
             // Customize the loan item if necessary
             LoanVBox.getChildren().add(loanItem);
+        }
+    }
+
+    public void displayCategories(List<Category> categories) {
+        if (categories == null) return;
+        for (Category category : categories) {
+            Parent categoryItem = Main.loadItem("category_view.fxml", category);
+            // Customize the category item if necessary
+            CategoryVBox.getChildren().add(categoryItem);
         }
     }
 

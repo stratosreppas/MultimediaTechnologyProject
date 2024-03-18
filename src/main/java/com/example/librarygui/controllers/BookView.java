@@ -27,10 +27,10 @@ public class BookView extends Controller{
 
         titleText.setText(book.title);
         authorText.setText(book.author);
-        categoryText.setText(book.category);
         yearText.setText(book.year);
         isbnText.setText(book.isbn);
         publisherText.setText(book.publisher);
+        categoryText.setText(library.getBooksCategory(book));
     }
 
     public void addBook() {
@@ -40,7 +40,7 @@ public class BookView extends Controller{
 
     public void lendBook() {
         if (Banner.showConfirmationDialog("Lend Book", "Are you sure you want to lend this book?") && library.loggedUser != null) {
-            library.loans.add(new Loan(library.getNewLoanId(), book, library.loggedUser));
+            library.addLoan(new Loan(library.getNewLoanId(), book, library.loggedUser));
             Banner.showInformationDialog("Success", "Book lent successfully");
         }
         else
