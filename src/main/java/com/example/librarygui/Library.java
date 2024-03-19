@@ -743,5 +743,16 @@ public class Library {
         return sum / count;
     }
 
+    public List<Book> getBooksByCategory(String category) {
+        List<Book> books = new ArrayList<>();
+        if(this.books != null)
+            for (Book book : this.books) {
+                if (getBooksCategory(book).equals(category)) {
+                    books.add(book);
+                }
+            }
+        return books;
+    }
+
 
 }
