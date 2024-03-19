@@ -145,7 +145,7 @@ public class AddBookPage extends Controller {
         public void deleteBook(ActionEvent event) throws Exception {
             if (library.removeBook(book)) {
                 Banner.showInformationDialog("Success", "Book deleted successfully");
-                Main.loadFXML("user_main_page.fxml");
+                Main.loadFXML("admin_main_page.fxml");
             }
             else
                 Banner.showErrorBanner("Error", "Book not found");

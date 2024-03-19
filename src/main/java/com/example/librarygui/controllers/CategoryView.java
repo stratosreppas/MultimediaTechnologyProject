@@ -52,25 +52,24 @@ public class CategoryView extends Controller{
             deleteCategory();
             return;
         }
-        if (Banner.showConfirmationDialog(
-                "Edit Category",
-                "Are you sure you want to edit this category? " +
-                        "This action will also change the category of all the books in this category."
-        )) {
-            if (library.categoryExists(newCategory)) {
-                Banner.showErrorBanner("Error", "Category already exists");
-                return;
-            }
+
+        if (library.categoryExists(newCategory)) {
+            Banner.showErrorBanner("Error", "Category already exists");
+            return;
+        }
+
             if(category == null) {
-                library.addCategory(newCategory);
-                Banner.showInformationDialog("Success", "Category added successfully");
-                Main.loadFXML("admin_main_page.fxml");
+                if(Banner.showConfirmationDialog("Add Category", "Are you sure you want to add this category?")) {
+                    library.addCategory(newCategory);
+                    Banner.showInformationDialog("Success", "Category added successfully");
+                    Main.loadFXML("admin_main_page.fxml");
+                }
             }
-            else if (library.editCategory(category.name, newCategory)) {
+            else if (Banner.showConfirmationDialog("Edit Category", "Are you sure you want to edit this category?")
+                    && library.editCategory(category.name, newCategory)) {
                 Banner.showInformationDialog("Success", "Category edited successfully");
                 Main.loadFXML("admin_main_page.fxml");
             } else
                 Banner.showErrorBanner("Error", "Category not found");
-        }
     }
 }
