@@ -319,10 +319,10 @@ public class Library {
         }
     }
 
-    public boolean userExists(String username) {
+    public boolean userExists(String query) {
         if(users == null) return false;
         for (User user : users) {
-            if (user.username.equals(username)) {
+            if (user.username.equals(query) || user.email.equals(query) || user.adt.equals(query)) {
                 return true;
             }
         }
@@ -428,6 +428,8 @@ public class Library {
         public boolean removeLoan(Loan loan) {
             if (loans != null) {
                 loans.remove(loan);
+                loan.book.addCopy();
+                editBook(loan.book.isbn, loan.book);
                 return true;
             }
             return false;
@@ -481,7 +483,7 @@ public class Library {
         List<Book> results = new ArrayList<>();
         if(books != null)
             for (Book book : books) {
-                if (book.title.contains(query) || book.author.contains(query) || book.isbn.contains(query) || book.publisher.contains(query) || book.year.contains(query)) {
+                if (book.title.contains(query) || book.author.contains(query) || book.isbn.contains(query) || book.year.contains(query)) {
                     results.add(book);
                 }
             }
@@ -559,6 +561,8 @@ public class Library {
             sortedBooks.sort((book1, book2) -> book1.copies.compareTo(book2.copies));
         } else if(criteria.equals("Category")) {
             sortedBooks.sort((book1, book2) -> getBooksCategory(book1).compareTo(getBooksCategory(book2)));
+        } else if(criteria.equals("Rating")) {
+            sortedBooks.sort((book1, book2) -> Double.compare(getBookRatingAverage(book2), getBookRatingAverage(book1)));
         }
         if (order.equals("descending")) {
             List<Book> reversedBooks = new ArrayList<>();

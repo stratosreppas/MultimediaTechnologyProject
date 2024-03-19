@@ -87,8 +87,18 @@ public class SignUpPage extends Controller{
                 return;
             }
 
-            if (library.userExists(username)) {
+            if (library.userExists(username) && !username.equals(user.username)){
                 Banner.showErrorBanner("Error", "Username already exists");
+                return;
+            }
+
+            if(library.userExists(email) && !email.equals(user.email)) {
+                Banner.showErrorBanner("Error", "User with that email already exists");
+                return;
+            }
+
+            if(library.userExists(adt) && !adt.equals(user.adt)) {
+                Banner.showErrorBanner("Error", "User with that ADT already exists");
                 return;
             }
 

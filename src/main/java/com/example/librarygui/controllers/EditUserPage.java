@@ -56,7 +56,7 @@ public void init() {
             return;
         }
 
-        if (library.userExists(username)) {
+        if (library.userExists(username) && !username.equals(prev_username)) {
             Banner.showErrorBanner("Error", "User already exists");
             return;
         }
@@ -88,7 +88,7 @@ public void init() {
             }
 
             library.editUser(prev_username, username, user.password, firstname, lastname, adt, email);
-            Main.loadFXML("user_main_page.fxml");
+            Main.loadFXML("admin_main_page.fxml");
         }
 
     }
@@ -96,7 +96,7 @@ public void init() {
     public void deleteUser(ActionEvent event) throws Exception {
         if (library.removeUser(user)) {
             Banner.showInformationDialog("Success", "User deleted successfully");
-            Main.loadFXML("user_main_page.fxml");
+            Main.loadFXML("admin_main_page.fxml");
         }
         else
             Banner.showErrorBanner("Error", "User not found");

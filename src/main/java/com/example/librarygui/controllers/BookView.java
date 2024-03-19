@@ -13,11 +13,9 @@ public class BookView extends Controller{
     public Book book;
     public Text titleText;
     public Text authorText;
-    public Text categoryText;
-    public Text yearText;
+    public Text ratingText;
     public Text isbnText;
-    public Text publisherText;
-    public Text copiesText;
+    public Text ratingCountText;
     @FXML
     Button lendButton;
 
@@ -27,10 +25,9 @@ public class BookView extends Controller{
 
         titleText.setText(book.title);
         authorText.setText(book.author);
-        yearText.setText(book.year);
+        ratingText.setText(Double.toString(library.getBookRatingAverage(book)));
         isbnText.setText(book.isbn);
-        publisherText.setText(book.publisher);
-        categoryText.setText(library.getBooksCategory(book));
+        ratingCountText.setText("By "+library.getBookRatingCount(book)+" users");
     }
 
     public void addBook() {
@@ -52,6 +49,7 @@ public class BookView extends Controller{
             book.removeCopy();
             library.editBook(book.isbn, book);
             Banner.showInformationDialog("Success", "Book lent successfully");
+            Main.loadFXML("user_main_page.fxml");
         }
         else
             Banner.showErrorBanner("Error", "Couldn't lend the book");

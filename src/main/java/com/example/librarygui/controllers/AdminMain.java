@@ -17,7 +17,7 @@ import java.util.List;
 public class AdminMain extends MainPageController{
 
     public void init() {
-        UserTilePane.getChildren().subList(1, UserTilePane.getChildren().size()).clear();
+        UserTilePane.getChildren().clear();
         BookTilePane.getChildren().subList(1, BookTilePane.getChildren().size()).clear();
         LoanVBox.getChildren().clear();
         CategoryVBox.getChildren().clear();

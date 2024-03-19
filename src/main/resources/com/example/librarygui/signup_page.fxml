@@ -15,10 +15,19 @@
 <?import javafx.stage.Stage?>
 
 <?import javafx.scene.layout.HBox?>
+<?import javafx.scene.control.Tooltip?>
 <BorderPane xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.librarygui.controllers.SignUpPage" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" style="-fx-background-color: #d9d9d9;">
                <left>
                   <AnchorPane prefHeight="400.0" prefWidth="218.0" style="-fx-background-color: #27506e;" BorderPane.alignment="CENTER">
                      <children>
+                        <Button layoutX="7.0" layoutY="14.0" mnemonicParsing="false" onMouseClicked="#back">
+                           <graphic>
+                              <FontAwesomeIconView fill="#27506e" glyphName="ARROW_LEFT" />
+                           </graphic>
+                           <tooltip>
+                              <Tooltip style="-fx-show-delay: 0.2s;" text="BACK" />
+                           </tooltip>
+                        </Button>
                         <Text fill="#d9d9d9" layoutX="31.0" layoutY="75.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Library ECE">
                            <font>
                               <Font size="32.0" />
