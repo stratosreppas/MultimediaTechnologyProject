@@ -23,10 +23,10 @@ public class BookView extends Controller{
     public void init() {
         book = (Book) highlightedObject;
 
-        titleText.setText(book.title);
-        authorText.setText(book.author);
+        titleText.setText(book.getTitle());
+        authorText.setText(book.getAuthor());
         ratingText.setText(Double.toString(library.getBookRatingAverage(book)));
-        isbnText.setText(book.isbn);
+        isbnText.setText(book.getIsbn());
         ratingCountText.setText("By "+library.getBookRatingCount(book)+" users");
     }
 
@@ -37,17 +37,17 @@ public class BookView extends Controller{
 
     public void lendBook() {
         if (Banner.showConfirmationDialog("Lend Book", "Are you sure you want to lend this book?") && library.loggedUser != null) {
-            if(library.getUsersLoans(library.loggedUser.username).size() >= 2) {
+            if(library.getUsersLoans(library.loggedUser.getUsername()).size() >= 2) {
                 Banner.showErrorBanner("Error", "You can't lend more than 2 books");
                 return;
             }
-            if(Integer.parseInt(book.copies) <= 0) {
+            if(Integer.parseInt(book.getCopies()) <= 0) {
                 Banner.showErrorBanner("Error", "There are no copies of this book available");
                 return;
             }
             library.addLoan(new Loan(library.getNewLoanId(), book, library.loggedUser));
             book.removeCopy();
-            library.editBook(book.isbn, book);
+            library.editBook(book.getIsbn(), book);
             Banner.showInformationDialog("Success", "Book lent successfully");
             Main.loadFXML("user_main_page.fxml");
         }

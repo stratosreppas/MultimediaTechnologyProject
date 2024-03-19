@@ -6,13 +6,13 @@ import java.util.Calendar;
 import java.util.Date;
 
 public class Loan {
-    public String id;
-    public String loanDate;
-    public String returnDate;
+    private String id;
+    private String loanDate;
+    private String returnDate;
 
-    public Book book;
+    private Book book;
 
-    public User user;
+    private User user;
 
     public Loan(String id, Book book, User user) {
         this.id = id;
@@ -55,6 +55,46 @@ public class Loan {
         Date currentDate = new Date();
         System.out.println(dateFormat.format(currentDate));
         return dateFormat.format(currentDate);
+    }
+
+    public String getId() {
+        return this.id;
+    }
+
+    public String getLoanDate() {
+        return this.loanDate;
+    }
+
+    public String getReturnDate() {
+        return this.returnDate;
+    }
+
+    public Book getBook() {
+        return this.book;
+    }
+
+    public User getUser() {
+        return this.user;
+    }
+
+    public void setId(String id) {
+        this.id = id;
+    }
+
+    public void setLoanDate(String loanDate) {
+        this.loanDate = loanDate;
+    }
+
+    public void setReturnDate(String returnDate) {
+        this.returnDate = returnDate;
+    }
+
+    public void setBook(Book book) {
+        this.book = book;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
     }
 
 }

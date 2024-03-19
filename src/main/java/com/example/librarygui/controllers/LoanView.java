@@ -24,10 +24,10 @@ public class LoanView extends Controller{
 
     public void init() {
         Loan loan = (Loan) highlightedObject;
-        titleLabel.setText(loan.book.title);
-        isbnLabel.setText(loan.book.isbn);
-        loanDateText.setText(loan.loanDate);
-        returnDateText.setText(loan.returnDate);
+        titleLabel.setText(loan.getBook().getTitle());
+        isbnLabel.setText(loan.getBook().getIsbn());
+        loanDateText.setText(loan.getLoanDate());
+        returnDateText.setText(loan.getReturnDate());
         if(library.isAdmin()) {
             rateVBox.setVisible(false);
         }
@@ -40,7 +40,8 @@ public class LoanView extends Controller{
     public void returnBook() {
         if(library.isAdmin() && Banner.showConfirmationDialog("Return Book", "Are you sure you want to return this book?") ) {
             library.removeLoan((Loan) highlightedObject);
-            Banner.showInformationDialog("Success", "Book returned successfully.\nPlease refresh the page to see the changes");
+            Banner.showInformationDialog("Success", "Book returned successfully.");
+            Main.loadFXML("admin_main_page.fxml");
         }
     }
 

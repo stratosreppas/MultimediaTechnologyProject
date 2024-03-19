@@ -7,12 +7,12 @@ import javafx.scene.control.TextField;
 
 public class User {
 
-    public String username;
-    public String password;
-    public String firstName;
-    public String lastName;
-    public String adt;
-    public String email;
+    private String username;
+    private String password;
+    private String firstName;
+    private String lastName;
+    private String adt;
+    private String email;
 
     public User(String username, String password, String firstName, String lastName, String adt, String email) {
         this.username = username;
@@ -45,4 +45,53 @@ public class User {
             }
         }
     }
+
+    public String getUsername() {
+        return this.username;
+    }
+
+    public String getPassword() {
+        return this.password;
+    }
+
+    public String getFirstName() {
+        return this.firstName;
+    }
+
+    public String getLastName() {
+        return this.lastName;
+    }
+
+    public String getAdt() {
+        return this.adt;
+    }
+
+    public String getEmail() {
+        return this.email;
+    }
+
+    public void setUsername(String username) {
+        this.username = username;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
+    public void setFirstName(String firstName) {
+        this.firstName = firstName;
+    }
+
+    public void setLastName(String lastName) {
+        this.lastName = lastName;
+    }
+
+    public void setAdt(String adt) {
+        this.adt = adt;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
 }

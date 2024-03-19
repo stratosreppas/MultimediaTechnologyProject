@@ -31,13 +31,13 @@ public class RateBookPage extends Controller {
 
             titleText.setText("Rate Book");
             Loan loan = (Loan) highlightedObject;
-            this.book = loan.book;
+            this.book = loan.getBook();
             this.user = library.loggedUser;
 
             rating = library.getRating(book, user);
             if (rating != null) {
-                ratingField.getValueFactory().setValue(Integer.parseInt(rating.rating));
-                commentField.setText(rating.comment);
+                ratingField.getValueFactory().setValue(Integer.parseInt(rating.getRating()));
+                commentField.setText(rating.getComment());
             }
     }
 

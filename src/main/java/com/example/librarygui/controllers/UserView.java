@@ -18,11 +18,11 @@ public class UserView extends Controller{
     public void init() {
         user = (User) highlightedObject;
 
-        usernameText.setText(user.username);
-        firstnameText.setText(user.firstName);
-        lastnameText.setText(user.lastName);
-        emailText.setText(user.email);
-        adtText.setText(user.adt);
+        usernameText.setText(user.getUsername());
+        firstnameText.setText(user.getFirstName());
+        lastnameText.setText(user.getLastName());
+        emailText.setText(user.getEmail());
+        adtText.setText(user.getAdt());
     }
 
     public void addUser() {

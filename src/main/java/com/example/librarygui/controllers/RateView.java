@@ -14,7 +14,7 @@ public class RateView extends Controller{
     public void init() {
         rating = (Rating) highlightedObject;
 
-        ratingText.setText(rating.rating);
-        commentText.setText(rating.comment);
+        ratingText.setText(rating.getRating());
+        commentText.setText(rating.getComment());
     }
 }

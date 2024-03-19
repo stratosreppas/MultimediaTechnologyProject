@@ -44,7 +44,7 @@ public class LoginPage extends Controller{
             return;
         }
         for (int i = 0; i < library.users.size(); i++) {
-            if (library.users.get(i).username.equals(username) && library.users.get(i).password.equals(password)) {
+            if (library.users.get(i).getUsername().equals(username) && library.users.get(i).getPassword().equals(password)) {
                 Banner.showInformationDialog("Success", "Logged in successfully");
                 library.loggedUser = library.users.get(i);
                 if(library.isAdmin()) Main.loadFXML("admin_main_page.fxml");

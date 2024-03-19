@@ -30,26 +30,26 @@ public class SignUpPage extends Controller{
 
             this.user = (User) highlightedObject;
 
-            usernameField.setText(user.username);
-            usernameField.setPromptText(user.username);
+            usernameField.setText(user.getUsername());
+            usernameField.setPromptText(user.getUsername());
 
-            passwordField.setText(user.password);
-            passwordField.setPromptText(user.password);
+            passwordField.setText(user.getPassword());
+            passwordField.setPromptText(user.getPassword());
 
-            confirmPasswordField.setText(user.password);
-            confirmPasswordField.setPromptText(user.password);
+            confirmPasswordField.setText(user.getPassword());
+            confirmPasswordField.setPromptText(user.getPassword());
 
-            firstNameField.setText(user.firstName);
-            firstNameField.setPromptText(user.firstName);
+            firstNameField.setText(user.getFirstName());
+            firstNameField.setPromptText(user.getFirstName());
 
-            lastNameField.setText(user.lastName);
-            lastNameField.setPromptText(user.lastName);
+            lastNameField.setText(user.getLastName());
+            lastNameField.setPromptText(user.getLastName());
 
-            adtField.setText(user.adt);
-            adtField.setPromptText(user.adt);
+            adtField.setText(user.getAdt());
+            adtField.setPromptText(user.getAdt());
 
-            emailField.setText(user.email);
-            emailField.setPromptText(user.email);
+            emailField.setText(user.getEmail());
+            emailField.setPromptText(user.getEmail());
         }
         else {
             titleText.setText("Sign Up");
@@ -87,57 +87,57 @@ public class SignUpPage extends Controller{
                 return;
             }
 
-            if (library.userExists(username) && !username.equals(user.username)){
+            if (library.userExists(username) && !username.equals(user.getUsername())){
                 Banner.showErrorBanner("Error", "Username already exists");
                 return;
             }
 
-            if(library.userExists(email) && !email.equals(user.email)) {
+            if(library.userExists(email) && !email.equals(user.getEmail())) {
                 Banner.showErrorBanner("Error", "User with that email already exists");
                 return;
             }
 
-            if(library.userExists(adt) && !adt.equals(user.adt)) {
+            if(library.userExists(adt) && !adt.equals(user.getAdt())) {
                 Banner.showErrorBanner("Error", "User with that ADT already exists");
                 return;
             }
 
             if (highlightedObject != null) {
-                String prev_username = user.username;
-                String prev_password = user.password;
-                String prev_firstName = user.firstName;
-                String prev_lastName = user.lastName;
-                String prev_adt = user.adt;
-                String prev_email = user.email;
+                String prev_username = user.getUsername();
+                String prev_password = user.getPassword();
+                String prev_firstName = user.getFirstName();
+                String prev_lastName = user.getLastName();
+                String prev_adt = user.getAdt();
+                String prev_email = user.getEmail();
 
                 if (!username.equals(prev_username)) {
                     Banner.showInformationDialog("Success", "Username will be edited to: '" + username + "'");
-                    user.username = username;
+                    user.setUsername(username);
                 }
 
                 if (!password.equals(prev_password)) {
                     Banner.showInformationDialog("Success", "Password will be edited to: '" + password + "'");
-                    user.password = password;
+                    user.setPassword(password);
                 }
 
                 if (!firstName.equals(prev_firstName)) {
                     Banner.showInformationDialog("Success", "First Name will be edited to: '" + firstName + "'");
-                    user.firstName = firstName;
+                    user.setFirstName(firstName);
                 }
 
                 if (!lastName.equals(prev_lastName)) {
                     Banner.showInformationDialog("Success", "Last Name will be edited to: '" + lastName + "'");
-                    user.lastName = lastName;
+                    user.setLastName(lastName);
                 }
 
                 if (!adt.equals(prev_adt)) {
                     Banner.showInformationDialog("Success", "ADT will be edited to: '" + adt + "'");
-                    user.adt = adt;
+                    user.setAdt(adt);
                 }
 
                 if (!email.equals(prev_email)) {
                     Banner.showInformationDialog("Success", "Email will be edited to: '" + email + "'");
-                    user.email = email;
+                    user.setEmail(email);
                 }
 
                 library.editUser(prev_username, username, password, firstName, lastName, adt, email);
@@ -154,9 +154,11 @@ public class SignUpPage extends Controller{
 
         @FXML
         public void delete(ActionEvent event) throws Exception {
-            library.removeUser(user);
-            Banner.showInformationDialog("Success", "User deleted successfully");
-            Main.loadFXML("admin_main_page.fxml");
+            if (Banner.showConfirmationDialog("Delete User", "Are you sure you want to delete this user?")) {
+                library.removeUser(user);
+                Banner.showInformationDialog("Success", "User deleted successfully");
+                Main.loadFXML("admin_main_page.fxml");
+            }
         }
 
 }

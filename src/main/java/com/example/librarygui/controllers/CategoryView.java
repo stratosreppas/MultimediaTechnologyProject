@@ -21,8 +21,8 @@ public class CategoryView extends Controller{
     public void init(){
         category = (Category) highlightedObject;
         if(category != null) {
-            categoryTextField.setText(category.name);
-            categoryTextField.setPromptText(category.name);
+            categoryTextField.setText(category.getName());
+            categoryTextField.setPromptText(category.getName());
         }
         else {
             deleteButton.setVisible(false);
@@ -66,7 +66,7 @@ public class CategoryView extends Controller{
                 }
             }
             else if (Banner.showConfirmationDialog("Edit Category", "Are you sure you want to edit this category?")
-                    && library.editCategory(category.name, newCategory)) {
+                    && library.editCategory(category.getName(), newCategory)) {
                 Banner.showInformationDialog("Success", "Category edited successfully");
                 Main.loadFXML("admin_main_page.fxml");
             } else

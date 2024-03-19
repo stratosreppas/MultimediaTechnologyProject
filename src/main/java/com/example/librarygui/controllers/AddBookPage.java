@@ -30,7 +30,7 @@ public class AddBookPage extends Controller {
         //load the combo box from categories names
         comboBox.getItems().clear();
         for(int i = 0; i < library.categories.size(); i++)
-            comboBox.getItems().add(library.categories.get(i).name);
+            comboBox.getItems().add(library.categories.get(i).getName());
 
         if (highlightedObject != null){
             titleText.setText("Edit Book");
@@ -39,23 +39,23 @@ public class AddBookPage extends Controller {
 
             comboBox.setValue(library.getBooksCategory(book));
 
-            titleField.setText(book.title);
-            titleField.setPromptText(book.title);
+            titleField.setText(book.getTitle());
+            titleField.setPromptText(book.getTitle());
 
-            authorField.setText(book.author);
-            authorField.setPromptText(book.author);
+            authorField.setText(book.getAuthor());
+            authorField.setPromptText(book.getAuthor());
 
-            yearField.setText(book.year);
-            yearField.setPromptText(book.year);
+            yearField.setText(book.getYear());
+            yearField.setPromptText(book.getYear());
 
-            isbnField.setText(book.isbn);
-            isbnField.setPromptText(book.isbn);
+            isbnField.setText(book.getIsbn());
+            isbnField.setPromptText(book.getIsbn());
 
-            publisherField.setText(book.publisher);
-            publisherField.setPromptText(book.publisher);
+            publisherField.setText(book.getPublisher());
+            publisherField.setPromptText(book.getPublisher());
 
-            copiesField.setText(book.copies);
-            copiesField.setPromptText(book.copies);
+            copiesField.setText(book.getCopies());
+            copiesField.setPromptText(book.getCopies());
         }
 
         else {
@@ -91,12 +91,12 @@ public class AddBookPage extends Controller {
             }
 
         if(highlightedObject != null) {
-            String prev_title = book.title;
-            String prev_author = book.author;
-            String prev_year = book.year;
-            String prev_isbn = book.isbn;
-            String prev_publisher = book.publisher;
-            String prev_copies = book.copies;
+            String prev_title = book.getTitle();
+            String prev_author = book.getAuthor();
+            String prev_year = book.getYear();
+            String prev_isbn = book.getIsbn();
+            String prev_publisher = book.getPublisher();
+            String prev_copies = book.getCopies();
             String prev_category = library.getBooksCategory(book);
 
 
@@ -105,12 +105,13 @@ public class AddBookPage extends Controller {
                 return;
             }
             else {
-                    book.title = title;
-                    book.author = author;
-                    book.year = year;
-                    book.isbn = isbn;
-                    book.publisher = publisher;
-                    book.copies = copies;
+                    book.setTitle(title);
+                    book.setAuthor(author);
+                    book.setYear(year);
+                    book.setIsbn(isbn);
+                    book.setPublisher(publisher);
+                    book.setCopies(copies);
+
                     library.removeBookFromCategory(prev_category, prev_isbn);
                     library.addBookToCategory(category, isbn);
                 }

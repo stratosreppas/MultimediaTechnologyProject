@@ -19,7 +19,7 @@ public class Controller {
     }
 
     public String getCurrentUser() {
-        return library.loggedUser.username;
+        return library.loggedUser.getUsername();
     }
 
     public void init() {

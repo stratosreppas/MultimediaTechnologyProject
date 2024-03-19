@@ -32,13 +32,13 @@ public class PresentBookPage extends Controller{
 
     public void init() {
         Book book = (Book) highlightedObject;
-        titleText.setText(book.title);
-        authorText.setText(book.author);
-        isbnText.setText(book.isbn);
-        publisherText.setText(book.publisher);
+        titleText.setText(book.getTitle());
+        authorText.setText(book.getAuthor());
+        isbnText.setText(book.getIsbn());
+        publisherText.setText(book.getPublisher());
         categoryText.setText(library.getBooksCategory(book));
-        yearText.setText(book.year);
-        copiesText.setText(book.copies);
+        yearText.setText(book.getYear());
+        copiesText.setText(book.getCopies());
         ratingText.setText("Rating: "+ Double.toString(library.getBookRatingAverage(book))+ " based on "+ Integer.toString(library.getBookRatingCount(book)) + " ratings" );
 
         //print the ratings and comments

@@ -2,12 +2,12 @@ package com.example.librarygui;
 
 public class Book {
 
-    public String title;
-    public String author;
-    public String isbn;
-    public String publisher;
-    public String year;
-    public String copies;
+    private String title;
+    private String author;
+    private String isbn;
+    private String publisher;
+    private String year;
+    private String copies;
 
     public Book(String title, String author, String isbn, String publisher, String year, String copies) {
         this.title = title;
@@ -44,6 +44,54 @@ public class Book {
             copies++;
             this.copies = Integer.toString(copies);
         }
+    }
+
+    public String getTitle() {
+        return this.title;
+    }
+
+    public String getAuthor() {
+        return this.author;
+    }
+
+    public String getIsbn() {
+        return this.isbn;
+    }
+
+    public String getPublisher() {
+        return this.publisher;
+    }
+
+    public String getYear() {
+        return this.year;
+    }
+
+    public String getCopies() {
+        return this.copies;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
+    }
+
+    public void setAuthor(String author) {
+        this.author = author;
+    }
+
+    public void setIsbn(String isbn) {
+        this.isbn = isbn;
+    }
+
+    public void setPublisher(String publisher) {
+        this.publisher = publisher;
+    }
+
+    public void setYear(String year) {
+        this.year = year;
+    }
+
+    public void setCopies(String copies) {
+        this.copies = copies;
     }
 
 }

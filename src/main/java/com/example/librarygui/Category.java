@@ -8,8 +8,8 @@ import java.util.List;
 public class Category {
 
     private String path = "medialab/categories/";
-    public String name;
-    public List<String> isbns;
+    private String name;
+    private List<String> isbns;
 
     public Category(String name, List<String> isbns) {
         this.name = name;
@@ -44,4 +44,23 @@ public class Category {
         }
     }
 
+    public String getName() {
+        return this.name;
     }
+
+    public List<String> getISBNs() {
+        return this.isbns;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public void setISBNs(List<String> isbns) {
+        this.isbns = isbns;
+    }
+
+    public void removeISBN(String isbn) {
+        this.isbns.remove(isbn);
+    }
+}

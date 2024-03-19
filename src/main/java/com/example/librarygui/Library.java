@@ -3,10 +3,7 @@ import com.example.librarygui.interfaces.Banner;
 import com.example.librarygui.interfaces.FileIO;
 
 import java.io.File;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Iterator;
-import java.util.List;
+import java.util.*;
 
 public class Library {
 
@@ -61,6 +58,30 @@ public class Library {
         }
 
         return books;
+    }
+
+    public List<User> getUsers() {
+        return users;
+    }
+
+    public List<Admin> getAdmins() {
+        return admins;
+    }
+
+    public List<Book> getBooks() {
+        return books;
+    }
+
+    public List<Loan> getLoans() {
+        return loans;
+    }
+
+    public List<Category> getCategories() {
+        return categories;
+    }
+
+    public List<Rating> getRatings() {
+        return ratings;
     }
 
     public List<User> loadUsers() {
@@ -243,11 +264,11 @@ public class Library {
         FileIO.format_directory("medialab/ratings");
         if (ratings == null) return;
         for (Rating rating : ratings) {
-            FileIO.writeMultipleStrings("medialab/ratings/"+ rating.id + ".bin", new String[]{
-                    rating.rating,
-                    rating.comment,
-                    rating.book.isbn,
-                    rating.user.username
+            FileIO.writeMultipleStrings("medialab/ratings/"+ rating.getId() + ".bin", new String[]{
+                    rating.getRating(),
+                    rating.getComment(),
+                    rating.getBook().getIsbn(),
+                    rating.getUser().getUsername()
             });
         }
     }
@@ -256,13 +277,13 @@ public class Library {
         FileIO.format_directory("medialab/books");
         if (books == null) return;
         for (Book book : books) {
-            FileIO.writeMultipleStrings("medialab/books/"+ book.title + ".bin", new String[]{
-                    book.title,
-                    book.author,
-                    book.isbn,
-                    book.publisher,
-                    book.year,
-                    book.copies,
+            FileIO.writeMultipleStrings("medialab/books/"+ book.getIsbn() + ".bin", new String[]{
+                    book.getTitle(),
+                    book.getAuthor(),
+                    book.getIsbn(),
+                    book.getPublisher(),
+                    book.getYear(),
+                    book.getCopies(),
             });
         }
     }
@@ -271,11 +292,11 @@ public class Library {
         FileIO.format_directory("medialab/loans");
         if (loans == null) return;
         for (Loan loan : loans) {
-            FileIO.writeMultipleStrings("medialab/loans/"+ loan.id + ".bin", new String[]{
-                    loan.id,
-                    loan.loanDate,
-                    loan.book.title,
-                    loan.user.username
+            FileIO.writeMultipleStrings("medialab/loans/"+ loan.getId() + ".bin", new String[]{
+                    loan.getId(),
+                    loan.getLoanDate(),
+                    loan.getBook().getTitle(),
+                    loan.getUser().getUsername()
             });
         }
     }
@@ -287,25 +308,25 @@ public class Library {
         if (users == null) return;
         List<String> admin_usernames = new ArrayList<>();
         for (Admin admin : admins){
-            admin_usernames.add(admin.username);
-            FileIO.writeMultipleStrings("medialab/admins/" + admin.username + ".bin", new String[]{
-                    admin.username,
-                    admin.password,
-                    admin.firstName,
-                    admin.lastName,
-                    admin.adt,
-                    admin.email
+            admin_usernames.add(admin.getUsername());
+            FileIO.writeMultipleStrings("medialab/admins/" + admin.getUsername() + ".bin", new String[]{
+                    admin.getUsername(),
+                    admin.getPassword(),
+                    admin.getFirstName(),
+                    admin.getLastName(),
+                    admin.getAdt(),
+                    admin.getEmail()
             });
         }
         for (User user : users) {
-            if(admin_usernames.contains(user.username)) continue;
-            FileIO.writeMultipleStrings("medialab/users/" + user.username + ".bin", new String[]{
-                    user.username,
-                    user.password,
-                    user.firstName,
-                    user.lastName,
-                    user.adt,
-                    user.email
+            if(admin_usernames.contains(user.getUsername())) continue;
+            FileIO.writeMultipleStrings("medialab/users/" + user.getUsername() + ".bin", new String[]{
+                    user.getUsername(),
+                    user.getPassword(),
+                    user.getFirstName(),
+                    user.getLastName(),
+                    user.getAdt(),
+                    user.getEmail()
             });
         }
     }
@@ -315,14 +336,14 @@ public class Library {
         if (categories == null) return;
         // Αποθήκευση των κατηγοριών στο αρχείο
         for (Category category : categories) {
-            FileIO.writeMultipleStrings("medialab/categories/" + category.name + ".bin", category.isbns.toArray(new String[0]));
+            FileIO.writeMultipleStrings("medialab/categories/" + category.getName() + ".bin", category.getISBNs().toArray(new String[0]));
         }
     }
 
     public boolean userExists(String query) {
         if(users == null) return false;
         for (User user : users) {
-            if (user.username.equals(query) || user.email.equals(query) || user.adt.equals(query)) {
+            if (user.getUsername().equals(query) || user.getEmail().equals(query) || user.getAdt().equals(query)) {
                 return true;
             }
         }
@@ -332,7 +353,7 @@ public class Library {
     public boolean bookExists(String isbn) {
         if(books != null)
             for (Book book : books) {
-                if (book.isbn.equals(isbn)) {
+                if (book.getIsbn().equals(isbn)) {
                     return true;
                 }
             }
@@ -342,7 +363,7 @@ public class Library {
     public boolean categoryExists(String name) {
         if(categories != null)
             for (Category category : categories) {
-                if (category.name.equals(name)) {
+                if (category.getName().equals(name)) {
                     return true;
                 }
             }
@@ -369,17 +390,32 @@ public class Library {
     }
 
     public boolean removeBook(Book book) {
-        if (books != null) {
-            books.remove(book);
+        if (books != null && bookExists(book.getIsbn())) {
 
-            Iterator<Loan> iterator = loans.iterator();
-            while (iterator.hasNext()) {
-                Loan loan = iterator.next();
-                if (loan.book.isbn.equals(book.isbn)) {
-                    iterator.remove(); // Use iterator to safely remove the loan
+
+            List<Loan> delete_Loans = new ArrayList<>();
+            for (Loan loan : getLoans()) {
+                if (loan.getBook().getIsbn().equals(book.getIsbn())) {
+                    delete_Loans.add(loan);
                 }
             }
+            for(Loan l : delete_Loans){
+                if(l!=null) removeLoan(l);
+            }
 
+
+            List<Rating> delete_Ratings = new ArrayList<>();
+            for (Rating rating : getRatings()) {
+                if (rating.getBook().getIsbn().equals(book.getIsbn())) {
+                    delete_Ratings.add(rating);
+                }
+            }
+            for(Rating r : delete_Ratings){
+                if(r!=null) removeRating(r);
+            }
+
+
+            books.remove(book);
             return true;
         }
         return false;
@@ -387,20 +423,38 @@ public class Library {
 
 
     public boolean removeUser(User user) {
-            if (users != null) {
-
-                users.remove(user);
+            if (users != null && userExists(user.getUsername())) {
 
                 for (Admin a : admins) {
-                    if (a.username.equals(user.username)) {
+                    if (a.getUsername().equals(user.getUsername())) {
                         admins.remove(a);
                     }
                 }
-                for (Loan loan : loans) {
-                    if (loan.user.username.equals(user.username)) {
-                        removeLoan(loan);
+
+
+                List<Loan> delete_Loans = new ArrayList<>();
+                for (Loan loan : getLoans()) {
+                    if (loan.getUser().getUsername().equals(user.getUsername())) {
+                        delete_Loans.add(loan);
                     }
                 }
+                for(Loan l : delete_Loans){
+                    if(l!=null) removeLoan(l);
+                }
+
+
+                List<Rating> delete_Ratings = new ArrayList<>();
+                for (Rating rating : getRatings()) {
+                    if (rating.getUser().getUsername().equals(user.getUsername())) {
+                        delete_Ratings.add(rating);
+                    }
+                }
+                for(Rating r : delete_Ratings){
+                    if(r!=null) removeRating(r);
+                }
+
+
+                users.remove(user);
                 return true;
             }
             return false;
@@ -408,17 +462,19 @@ public class Library {
 
     public boolean removeCategory(Category category) {
         if (categories != null) {
-            categories.remove(category);
+
             // also delete all the books associated with this category
-            if (books != null) {
-                Iterator<Book> iterator = books.iterator();
-                while (iterator.hasNext()) {
-                    Book book = iterator.next();
-                    if (category.isbns.contains(book.isbn)) {
-                        iterator.remove(); // Use iterator to safely remove the book
-                    }
+            List<Book> delete_Books = new ArrayList<>();
+            for (Book book : getBooks()) {
+                if (getBooksCategory(book)!= null && getBooksCategory(book).equals(category.getName())) {
+                    delete_Books.add(book);
                 }
             }
+            for(Book b : delete_Books){
+                if(b!=null) removeBook(b);
+            }
+
+            categories.remove(category);
             return true;
         }
         return false;
@@ -428,23 +484,33 @@ public class Library {
         public boolean removeLoan(Loan loan) {
             if (loans != null) {
                 loans.remove(loan);
-                loan.book.addCopy();
-                editBook(loan.book.isbn, loan.book);
+                loan.getBook().addCopy();
+                editBook(loan.getBook().getIsbn(), loan.getBook());
                 return true;
             }
             return false;
         }
 
+        public void removeRating(String id) {
+            if(ratings != null)
+                for (Rating r : ratings) {
+                    if (r.getId().equals(id)) {
+                        ratings.remove(r);
+                        return;
+                    }
+                }
+        }
+
     public void editBook(String prev_isbn, Book book) {
         if(books != null)
             for (Book b : books) {
-                if (b.isbn.equals(prev_isbn)) {
-                    b.title = book.title;
-                    b.author = book.author;
-                    b.isbn = book.isbn;
-                    b.publisher = book.publisher;
-                    b.year = book.year;
-                    b.copies = book.copies;
+                if (b.getIsbn().equals(prev_isbn)) {
+                    b.setTitle(book.getTitle());
+                    b.setAuthor(book.getAuthor());
+                    b.setIsbn(book.getIsbn());
+                    b.setPublisher(book.getPublisher());
+                    b.setYear(book.getYear());
+                    b.setCopies(book.getCopies());
                     return;
                 }
             }
@@ -454,13 +520,13 @@ public class Library {
     public void editUser(String prev_username, String username, String password, String firstName, String lastName, String adt, String email) {
         if(users != null)
             for (User user : users) {
-                if (user.username.equals(prev_username)) {
-                    user.username = username;
-                    user.password = password;
-                    user.firstName = firstName;
-                    user.lastName = lastName;
-                    user.adt = adt;
-                    user.email = email;
+                if (user.getUsername().equals(prev_username)) {
+                    user.setUsername(username);
+                    user.setPassword(password);
+                    user.setFirstName(firstName);
+                    user.setLastName(lastName);
+                    user.setAdt(adt);
+                    user.setEmail(email);
                     return;
                 }
             }
@@ -470,8 +536,8 @@ public class Library {
     public boolean editCategory(String prev_name, String name) {
         if(categories != null)
             for (Category category : categories) {
-                if (category.name.equals(prev_name)) {
-                    category.name = name;
+                if (category.getName().equals(prev_name)) {
+                    category.setName(name);
                     return true;
                 }
             }
@@ -483,7 +549,7 @@ public class Library {
         List<Book> results = new ArrayList<>();
         if(books != null)
             for (Book book : books) {
-                if (book.title.contains(query) || book.author.contains(query) || book.isbn.contains(query) || book.year.contains(query)) {
+                if (book.getTitle().contains(query) || book.getIsbn().contains(query) || book.getAuthor().contains(query) || book.getYear().contains(query)) {
                     results.add(book);
                 }
             }
@@ -494,7 +560,7 @@ public class Library {
         List<User> results = new ArrayList<>();
         if(users != null)
             for (User user : users) {
-                if (user.username.contains(query) || user.firstName.contains(query) || user.lastName.contains(query) || user.adt.contains(query) || user.email.contains(query)) {
+                if (user.getUsername().contains(query) || user.getAdt().contains(query) || user.getEmail().contains(query) || user.getFirstName().contains(query) || user.getLastName().contains(query)){
                     results.add(user);
                 }
             }
@@ -505,7 +571,7 @@ public class Library {
         List<Loan> results = new ArrayList<>();
         if(loans != null)
             for (Loan loan : loans) {
-                if ( loan.user.username.equals(username)) {
+                if ( loan.getUser().getUsername().equals(username)) {
                     results.add(loan);
                 }
             }
@@ -515,7 +581,7 @@ public class Library {
     public void addBookToCategory(String category, String isbn) {
         if(categories != null)
             for (Category c : categories) {
-                if (c.name.equals(category)) {
+                if (c.getName().equals(category)) {
                     c.addISBN(isbn);
                     return;
                 }
@@ -525,8 +591,8 @@ public class Library {
     public void removeBookFromCategory(String category, String isbn) {
         if(categories != null)
             for (Category c : categories) {
-                if (c.name.equals(category)) {
-                    c.isbns.remove(isbn);
+                if (c.getName().equals(category)) {
+                    c.removeISBN(isbn);
                     return;
                 }
             }
@@ -537,8 +603,8 @@ public class Library {
         // If it does, return the category name
         // If it doesn't, return null
         for (Category category : categories) {
-            if (category.isbns.contains(book.isbn)) {
-                return category.name;
+            if (category.getISBNs().contains(book.getIsbn())) {
+                return category.getName();
             }
         }
         return null;
@@ -548,17 +614,15 @@ public class Library {
         if(books == null) return null;
         List<Book> sortedBooks = new ArrayList<>(books);
         if (criteria.equals("Title")) {
-            sortedBooks.sort((book1, book2) -> book1.title.compareTo(book2.title));
-        } else if (criteria.equals("Author")) {
-            sortedBooks.sort((book1, book2) -> book1.author.compareTo(book2.author));
-        } else if (criteria.equals("Year")) {
-            sortedBooks.sort((book1, book2) -> book1.year.compareTo(book2.year));
-        } else if (criteria.equals("ISBN")) {
-            sortedBooks.sort((book1, book2) -> book1.isbn.compareTo(book2.isbn));
-        } else if (criteria.equals("Publisher")) {
-            sortedBooks.sort((book1, book2) -> book1.publisher.compareTo(book2.publisher));
-        } else if (criteria.equals("Copies")) {
-            sortedBooks.sort((book1, book2) -> book1.copies.compareTo(book2.copies));
+            sortedBooks.sort(Comparator.comparing(Book::getTitle));
+        } else if(criteria.equals("Author")) {
+            sortedBooks.sort(Comparator.comparing(Book::getAuthor));
+        } else if(criteria.equals("ISBN")) {
+            sortedBooks.sort(Comparator.comparing(Book::getIsbn));
+        } else if(criteria.equals("Publisher")) {
+            sortedBooks.sort(Comparator.comparing(Book::getPublisher));
+        } else if(criteria.equals("Year")) {
+            sortedBooks.sort(Comparator.comparing(Book::getYear));
         } else if(criteria.equals("Category")) {
             sortedBooks.sort((book1, book2) -> getBooksCategory(book1).compareTo(getBooksCategory(book2)));
         } else if(criteria.equals("Rating")) {
@@ -578,15 +642,15 @@ public class Library {
         if(users == null) return null;
         List<User> sortedUsers = new ArrayList<>(users);
         if (criteria.equals("Username")) {
-            sortedUsers.sort((user1, user2) -> user1.username.compareTo(user2.username));
-        } else if (criteria.equals("First Name")) {
-            sortedUsers.sort((user1, user2) -> user1.firstName.compareTo(user2.firstName));
-        } else if (criteria.equals("Last Name")) {
-            sortedUsers.sort((user1, user2) -> user1.lastName.compareTo(user2.lastName));
-        } else if (criteria.equals("ADT")) {
-            sortedUsers.sort((user1, user2) -> user1.adt.compareTo(user2.adt));
-        } else if (criteria.equals("Email")) {
-            sortedUsers.sort((user1, user2) -> user1.email.compareTo(user2.email));
+            sortedUsers.sort(Comparator.comparing(User::getUsername));
+        } else if(criteria.equals("First Name")) {
+            sortedUsers.sort(Comparator.comparing(User::getFirstName));
+        } else if(criteria.equals("Last Name")) {
+            sortedUsers.sort(Comparator.comparing(User::getLastName));
+        } else if(criteria.equals("ADT")) {
+            sortedUsers.sort(Comparator.comparing(User::getAdt));
+        } else if(criteria.equals("Email")) {
+            sortedUsers.sort(Comparator.comparing(User::getEmail));
         }
         if (order.equals("descending")) {
             List<User> reversedUsers = new ArrayList<>();
@@ -601,7 +665,7 @@ public class Library {
     public boolean isAdmin(){
         if(loggedUser==null) return false;
         for (Admin admin : admins) {
-            if (admin.username.equals(loggedUser.username)) {
+            if (admin.getUsername().equals(loggedUser.getUsername())) {
                 return true;
             }
         }
@@ -611,13 +675,13 @@ public class Library {
     public String getNewLoanId() {
         if(loans.size() == 0) return "1";
         //get last item's id and increment it by 1
-        return String.valueOf(Integer.parseInt(loans.get(loans.size()-1).id) + 1);
+        return String.valueOf(Integer.parseInt(loans.get(loans.size()-1).getId()) + 1);
     }
 
     public String getNewRatingId() {
         if(ratings.size() == 0) return "1";
         //get last item's id and increment it by 1
-        return String.valueOf(Integer.parseInt(ratings.get(ratings.size()-1).id) + 1);
+        return String.valueOf(Integer.parseInt(ratings.get(ratings.size()-1).getId()) + 1);
     }
 
     public void addRating(String rating, String review, Book book, User user) {
@@ -625,12 +689,12 @@ public class Library {
         ratings.add(new Rating(getNewRatingId(), rating, review, book, user));
     }
 
-    public void editRating(String rating, String review, Book book, User user) {
+    public void editRating(String rating, String comment, Book book, User user) {
         if(ratings != null)
             for (Rating r : ratings) {
-                if (r.book.isbn.equals(book.isbn) && r.user.username.equals(user.username)) {
-                    r.rating = rating;
-                    r.comment = review;
+                if (r.getBook().getIsbn().equals(book.getIsbn()) && r.getUser().getUsername().equals(user.getUsername())) {
+                    r.setRating(rating);
+                    r.setComment(comment);
                     return;
                 }
             }
@@ -639,7 +703,7 @@ public class Library {
     public Rating getRating(Book book, User user) {
         if(ratings != null)
             for (Rating r : ratings) {
-                if (r.book.isbn.equals(book.isbn) && r.user.username.equals(user.username)) {
+                if (r.getBook().getIsbn().equals(book.getIsbn()) && r.getUser().getUsername().equals(user.getUsername())) {
                     return r;
                 }
             }
@@ -654,7 +718,7 @@ public class Library {
         int count = 0;
         if(ratings != null)
             for (Rating r : ratings) {
-                if (r.book.isbn.equals(book.isbn)) {
+                if (r.getBook().getIsbn().equals(book.getIsbn())) {
                     count++;
                 }
             }
@@ -666,8 +730,8 @@ public class Library {
         int count = 0;
         if(ratings != null)
             for (Rating r : ratings) {
-                if (r.book.isbn.equals(book.isbn)) {
-                    sum += Double.parseDouble(r.rating);
+                if (r.getBook().getIsbn().equals(book.getIsbn())) {
+                    sum += Double.parseDouble(r.getRating());
                     count++;
                 }
             }
