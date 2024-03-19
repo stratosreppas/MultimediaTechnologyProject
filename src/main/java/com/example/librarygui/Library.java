@@ -5,6 +5,7 @@ import com.example.librarygui.interfaces.FileIO;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Iterator;
 import java.util.List;
 
 public class Library {
@@ -14,6 +15,7 @@ public class Library {
     public List<Admin> admins;
     public List<Loan> loans;
     public List<Category> categories;
+    public List<Rating> ratings;
     public User loggedUser;
 
     public Library() {
@@ -22,6 +24,7 @@ public class Library {
         this.admins = loadAdmins();
         this.categories = loadCategories();
         this.loans = loadLoans();
+        this.ratings = loadRatings();
     }
 
     public List<Book> loadBooks() {
@@ -50,8 +53,7 @@ public class Library {
                                 book_info[2],
                                 book_info[3],
                                 book_info[4],
-                                book_info[5],
-                                book_info[6]
+                                book_info[5]
                         ));
                     }
                 }
@@ -206,6 +208,50 @@ public class Library {
         return loans;
     }
 
+    public List<Rating> loadRatings() {
+        List<Rating> ratings = new ArrayList<>();
+        File ratingsDirectory = new File("medialab/ratings/");
+        // Check if the directory exists
+        if (!ratingsDirectory.exists() || !ratingsDirectory.isDirectory()) {
+            System.err.println("Ratings directory not found or is not a directory.");
+            return ratings;
+        }
+        // Get list of files in the directory
+        File[] ratingFiles = ratingsDirectory.listFiles();
+        // Iterate over the files and load user information
+        if (ratingFiles != null) {
+            for (File file : ratingFiles) {
+                if (file.isFile()) {
+                    String fileName = file.getName();
+                    if (fileName.endsWith(".bin")) {
+                        String[] rating_info = FileIO.readMultipleStrings(file.getAbsolutePath());
+                        ratings.add(new Rating(
+                                fileName.substring(0, fileName.length() - 4),
+                                rating_info[0],
+                                rating_info[1],
+                                searchBooks(rating_info[2]).get(0),
+                                searchUsers(rating_info[3]).get(0)
+                        ));
+                    }
+                }
+            }
+        }
+        return ratings;
+    }
+
+    public void saveRatings() {
+        FileIO.format_directory("medialab/ratings");
+        if (ratings == null) return;
+        for (Rating rating : ratings) {
+            FileIO.writeMultipleStrings("medialab/ratings/"+ rating.id + ".bin", new String[]{
+                    rating.rating,
+                    rating.comment,
+                    rating.book.isbn,
+                    rating.user.username
+            });
+        }
+    }
+
     public void saveBooks() {
         FileIO.format_directory("medialab/books");
         if (books == null) return;
@@ -217,7 +263,6 @@ public class Library {
                     book.publisher,
                     book.year,
                     book.copies,
-                    book.rating
             });
         }
     }
@@ -266,6 +311,7 @@ public class Library {
     }
 
     public void saveCategories() {
+        FileIO.format_directory("medialab/categories");
         if (categories == null) return;
         // Αποθήκευση των κατηγοριών στο αρχείο
         for (Category category : categories) {
@@ -323,13 +369,14 @@ public class Library {
     }
 
     public boolean removeBook(Book book) {
-        if (books != null){
-
+        if (books != null) {
             books.remove(book);
 
-            for (Loan loan : loans) {
+            Iterator<Loan> iterator = loans.iterator();
+            while (iterator.hasNext()) {
+                Loan loan = iterator.next();
                 if (loan.book.isbn.equals(book.isbn)) {
-                    removeLoan(loan);
+                    iterator.remove(); // Use iterator to safely remove the loan
                 }
             }
 
@@ -337,6 +384,7 @@ public class Library {
         }
         return false;
     }
+
 
     public boolean removeUser(User user) {
             if (users != null) {
@@ -358,21 +406,24 @@ public class Library {
             return false;
         }
 
-        public boolean removeCategory(Category category) {
-            if (categories != null) {
-                categories.remove(category);
-                //also deletes all the books associated with this category
-
-                if(books != null)
-                    for(Book book : books){
-                        if(category.isbns.contains(book.isbn)){
-                            removeBook(book);
-                        }
+    public boolean removeCategory(Category category) {
+        if (categories != null) {
+            categories.remove(category);
+            // also delete all the books associated with this category
+            if (books != null) {
+                Iterator<Book> iterator = books.iterator();
+                while (iterator.hasNext()) {
+                    Book book = iterator.next();
+                    if (category.isbns.contains(book.isbn)) {
+                        iterator.remove(); // Use iterator to safely remove the book
                     }
-                return true;
+                }
             }
-            return false;
+            return true;
         }
+        return false;
+    }
+
 
         public boolean removeLoan(Loan loan) {
             if (loans != null) {
@@ -382,16 +433,16 @@ public class Library {
             return false;
         }
 
-    public void editBook(String prev_isbn, String title, String author, String year, String isbn, String publisher, String copies) {
+    public void editBook(String prev_isbn, Book book) {
         if(books != null)
-            for (Book book : books) {
-                if (book.isbn.equals(prev_isbn)) {
-                    book.title = title;
-                    book.author = author;
-                    book.year = year;
-                    book.isbn = isbn;
-                    book.publisher = publisher;
-                    book.copies = copies;
+            for (Book b : books) {
+                if (b.isbn.equals(prev_isbn)) {
+                    b.title = book.title;
+                    b.author = book.author;
+                    b.isbn = book.isbn;
+                    b.publisher = book.publisher;
+                    b.year = book.year;
+                    b.copies = book.copies;
                     return;
                 }
             }
@@ -506,8 +557,8 @@ public class Library {
             sortedBooks.sort((book1, book2) -> book1.publisher.compareTo(book2.publisher));
         } else if (criteria.equals("Copies")) {
             sortedBooks.sort((book1, book2) -> book1.copies.compareTo(book2.copies));
-        } else if (criteria.equals("Rating")) {
-            sortedBooks.sort((book1, book2) -> book1.rating.compareTo(book2.rating));
+        } else if(criteria.equals("Category")) {
+            sortedBooks.sort((book1, book2) -> getBooksCategory(book1).compareTo(getBooksCategory(book2)));
         }
         if (order.equals("descending")) {
             List<Book> reversedBooks = new ArrayList<>();
@@ -558,4 +609,67 @@ public class Library {
         //get last item's id and increment it by 1
         return String.valueOf(Integer.parseInt(loans.get(loans.size()-1).id) + 1);
     }
+
+    public String getNewRatingId() {
+        if(ratings.size() == 0) return "1";
+        //get last item's id and increment it by 1
+        return String.valueOf(Integer.parseInt(ratings.get(ratings.size()-1).id) + 1);
+    }
+
+    public void addRating(String rating, String review, Book book, User user) {
+        if(ratings == null) ratings = new ArrayList<>();
+        ratings.add(new Rating(getNewRatingId(), rating, review, book, user));
+    }
+
+    public void editRating(String rating, String review, Book book, User user) {
+        if(ratings != null)
+            for (Rating r : ratings) {
+                if (r.book.isbn.equals(book.isbn) && r.user.username.equals(user.username)) {
+                    r.rating = rating;
+                    r.comment = review;
+                    return;
+                }
+            }
+    }
+
+    public Rating getRating(Book book, User user) {
+        if(ratings != null)
+            for (Rating r : ratings) {
+                if (r.book.isbn.equals(book.isbn) && r.user.username.equals(user.username)) {
+                    return r;
+                }
+            }
+        return null;
+    }
+
+    public void removeRating(Rating rating) {
+        if(ratings != null) ratings.remove(rating);
+    }
+
+    public int getBookRatingCount(Book book) {
+        int count = 0;
+        if(ratings != null)
+            for (Rating r : ratings) {
+                if (r.book.isbn.equals(book.isbn)) {
+                    count++;
+                }
+            }
+        return count;
+    }
+
+    public double getBookRatingAverage(Book book) {
+        double sum = 0;
+        int count = 0;
+        if(ratings != null)
+            for (Rating r : ratings) {
+                if (r.book.isbn.equals(book.isbn)) {
+                    sum += Double.parseDouble(r.rating);
+                    count++;
+                }
+            }
+        if (count == 0) return 0;
+        return sum / count;
+    }
+
+
 }

@@ -31,17 +31,19 @@ public class CategoryView extends Controller{
     }
 
     public void deleteCategory() throws Exception {
-        if(Banner.showConfirmationDialog(
+        if (Banner.showConfirmationDialog(
                 "Delete Category",
                 "Are you sure you want to delete this category? " +
                         "This action will also remove all the books in this category."
-        ))
+        )) {
+            System.out.println("delete category");
+
             if (library.removeCategory(category)) {
                 Banner.showInformationDialog("Success", "Category deleted successfully");
-                Main.loadFXML("user_main_page.fxml");
-            }
-            else
+                Main.loadFXML("admin_main_page.fxml");
+            } else
                 Banner.showErrorBanner("Error", "Book not found");
+        }
     }
 
     public void editCategory() throws Exception {

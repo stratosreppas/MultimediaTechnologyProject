@@ -1,14 +1,61 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import java.lang.*?>
-<?import java.util.*?>
-<?import javafx.scene.*?>
-<?import javafx.scene.control.*?>
-<?import javafx.scene.layout.*?>
+<?import de.jensd.fx.glyphs.fontawesome.FontAwesomeIconView?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.control.Spinner?>
+<?import javafx.scene.control.TextArea?>
+<?import javafx.scene.control.Tooltip?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
+<?import javafx.scene.text.Text?>
 
-<AnchorPane xmlns="http://javafx.com/javafx"
-            xmlns:fx="http://javafx.com/fxml"
-            fx:controller="com.example.librarygui.controllers.RateController"
-            prefHeight="400.0" prefWidth="600.0" >
+<!---->
 
-</AnchorPane>
+<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" style="-fx-background-color: #d9d9d9;" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.librarygui.controllers.RateBookPage">
+    <left>
+        <AnchorPane prefHeight="400.0" prefWidth="218.0" style="-fx-background-color: #27506e;" BorderPane.alignment="CENTER">
+            <children>
+                <Button layoutX="7.0" layoutY="14.0" mnemonicParsing="false" onMouseClicked="#back">
+                    <graphic>
+                        <FontAwesomeIconView fill="#27506e" glyphName="ARROW_LEFT" />
+                    </graphic>
+                    <tooltip>
+                        <Tooltip style="-fx-show-delay: 0.2s;" text="BACK" />
+                    </tooltip>
+                </Button>
+                <Text fill="#d9d9d9" layoutX="60.0" layoutY="34.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Library ECE">
+                    <font>
+                        <Font size="20.0" />
+                    </font>
+                </Text>
+                <Text fx:id="titleText" fill="#d9d9d9" layoutX="73.0" layoutY="207.0" strokeType="OUTSIDE" strokeWidth="0.0">
+                    <font>
+                        <Font size="20.0" />
+                    </font>
+                </Text>
+            </children>
+        </AnchorPane>
+    </left>
+    <center>
+        <ScrollPane fitToWidth="true" prefHeight="400.0" prefWidth="382.0" style="-fx-background-color: #d9d9d9;" BorderPane.alignment="CENTER">
+            <content>
+                <VBox alignment="CENTER" prefHeight="28.0" prefWidth="150.0" spacing="30.0" style="-fx-alignment: left;">
+                    <children>
+                        <FontAwesomeIconView fill="#27506e" glyphName="STAR" scaleX="10.0" scaleY="10.0">
+                            <VBox.margin>
+                                <Insets bottom="40.0" top="60.0" />
+                            </VBox.margin>
+                        </FontAwesomeIconView>
+                        <Spinner max="5" fx:id="ratingField"/>
+                        <TextArea prefHeight="200.0" prefWidth="200.0" promptText="Rate" fx:id="commentField"/>
+                        <Button mnemonicParsing="false" onAction="#save" style="-fx-background-color: #27506E;" text="Save" textFill="#d9d9d9" />
+                    </children>
+                </VBox>
+            </content>
+        </ScrollPane>
+    </center>
+</BorderPane>

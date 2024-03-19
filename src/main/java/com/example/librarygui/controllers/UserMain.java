@@ -30,5 +30,4 @@ public class UserMain extends MainPageController{
         displayLoans(library.getUsersLoans(username));
     }
 
-
 }

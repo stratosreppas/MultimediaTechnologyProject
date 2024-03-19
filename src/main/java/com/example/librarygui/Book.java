@@ -8,16 +8,42 @@ public class Book {
     public String publisher;
     public String year;
     public String copies;
-    public String rating;
 
-    public Book(String title, String author, String isbn, String publisher, String year, String copies, String rating) {
+    public Book(String title, String author, String isbn, String publisher, String year, String copies) {
         this.title = title;
         this.author = author;
         this.isbn = isbn;
         this.publisher = publisher;
         this.year = year;
         this.copies = copies;
-        this.rating = rating;
+    }
+
+    public boolean isNumeric() {
+        try {
+            Integer.parseInt(copies);
+            Integer.parseInt(year);
+            return true;
+        } catch (NumberFormatException e) {
+            return false;
+        }
+    }
+
+    public void removeCopy() {
+        if (isNumeric()) {
+            int copies = Integer.parseInt(this.copies);
+            if (copies > 0) {
+                copies--;
+                this.copies = Integer.toString(copies);
+            }
+        }
+    }
+
+    public void addCopy() {
+        if (isNumeric()) {
+            int copies = Integer.parseInt(this.copies);
+            copies++;
+            this.copies = Integer.toString(copies);
+        }
     }
 
 }

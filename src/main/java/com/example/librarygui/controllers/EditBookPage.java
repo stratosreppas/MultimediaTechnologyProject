@@ -21,7 +21,7 @@ public class EditBookPage extends Controller {
     public TextField copiesField;
 
     public Book editBook(String title, String author, String category, String year, String isbn, String publisher, String copies, String rating) {
-        return new Book(title, author, year, isbn, publisher, copies, rating);
+        return new Book(title, author, isbn, publisher, year, copies);
     }
 
     @FXML
@@ -115,7 +115,7 @@ public class EditBookPage extends Controller {
                     Banner.showInformationDialog("Success", "Book Copies will be edited to: " + copies + "'");
                 }
 
-                library.editBook(prev_isbn, title, author, year, isbn, publisher, copies);
+                library.editBook(prev_isbn, new Book(title, author, isbn, publisher, year, copies));
                 Main.loadFXML("user_main_page.fxml");
             }
         }

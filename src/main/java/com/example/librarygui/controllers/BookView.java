@@ -40,10 +40,25 @@ public class BookView extends Controller{
 
     public void lendBook() {
         if (Banner.showConfirmationDialog("Lend Book", "Are you sure you want to lend this book?") && library.loggedUser != null) {
+            if(library.getUsersLoans(library.loggedUser.username).size() >= 2) {
+                Banner.showErrorBanner("Error", "You can't lend more than 2 books");
+                return;
+            }
+            if(Integer.parseInt(book.copies) <= 0) {
+                Banner.showErrorBanner("Error", "There are no copies of this book available");
+                return;
+            }
             library.addLoan(new Loan(library.getNewLoanId(), book, library.loggedUser));
+            book.removeCopy();
+            library.editBook(book.isbn, book);
             Banner.showInformationDialog("Success", "Book lent successfully");
         }
         else
             Banner.showErrorBanner("Error", "Couldn't lend the book");
+    }
+
+    public void presentBook() {
+        if(library.loggedUser!=null)
+            Main.loadFXML("present_book_page.fxml", book);
     }
 }

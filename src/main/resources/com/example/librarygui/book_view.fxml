@@ -46,7 +46,7 @@
             <Insets bottom="10.0" />
          </VBox.margin>
       </Text>
-      <FontAwesomeIconView fill="#27506e" glyphName="INFO" scaleX="1.0" scaleY="1.0" >
+      <FontAwesomeIconView fill="#27506e" glyphName="INFO" scaleX="1.0" scaleY="1.0" onMouseClicked="#presentBook">
          <VBox.margin>
             <Insets top="10.0" />
             <Insets bottom="20.0" />

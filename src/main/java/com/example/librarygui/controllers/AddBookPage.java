@@ -114,8 +114,12 @@ public class AddBookPage extends Controller {
                     library.removeBookFromCategory(prev_category, prev_isbn);
                     library.addBookToCategory(category, isbn);
                 }
-
-                library.editBook(prev_isbn, title, author, year, isbn, publisher, copies);
+                Book new_book = new Book(title, author, isbn, publisher, year, copies);
+                if(!new_book.isNumeric()){
+                    Banner.showErrorBanner("Error", "Copies and Year must be a number");
+                    return;
+                }
+                library.editBook(prev_isbn, new_book);
                 Banner.showInformationDialog("Success", "Book '" + title + "' edited successfully");
             }
 
@@ -125,14 +129,17 @@ public class AddBookPage extends Controller {
                 return;
             }
             else {
-                book = new Book(title, author, year, isbn, publisher, copies,"0");
+                book = new Book(title, author, isbn, publisher, year, copies);
+                if(!book.isNumeric()){
+                    Banner.showErrorBanner("Error", "Copies and Year must be a number");
+                    return;
+                }
                 library.addBook(book);
                 library.addBookToCategory(category, isbn);
                 Banner.showInformationDialog("Success", "Book '" + title + "' added successfully");
             }
         }
             Main.loadFXML("admin_main_page.fxml");
-
         }
 
         public void deleteBook(ActionEvent event) throws Exception {

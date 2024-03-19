@@ -166,17 +166,34 @@
                 <top>
                     <VBox prefHeight="57.0" prefWidth="700.0" style="-fx-background-color: #27506e;" BorderPane.alignment="CENTER">
                         <children>
-                            <Button mnemonicParsing="false" onMouseClicked="#refresh">
-                                <graphic>
-                                    <FontAwesomeIconView fill="#27506e" glyphName="REFRESH" />
-                                </graphic>
-                                <tooltip>
-                                    <Tooltip style="-fx-show-delay: 0.2s;" text="Refresh" />
-                                </tooltip>
+                            <HBox fillHeight="false" spacing="5.0">
+                                <children>
+                                    <Button mnemonicParsing="false" onMouseClicked="#refresh">
+                                        <graphic>
+                                            <FontAwesomeIconView fill="#27506e" glyphName="REFRESH" />
+                                        </graphic>
+                                        <tooltip>
+                                            <Tooltip style="-fx-show-delay: 0.2s;" text="Refresh" />
+                                        </tooltip>
+                                    </Button>
+                                    <Button mnemonicParsing="false" onMouseClicked="#logout">
+                                        <graphic>
+                                            <HBox alignment="CENTER">
+                                                <children>
+                                                    <FontAwesomeIconView fill="#27506e" glyphName="WARNING" scaleX="0.5" scaleY="0.5" />
+                                                    <FontAwesomeIconView fill="#27506e" glyphName="USER" />
+                                                </children>
+                                            </HBox>
+                                        </graphic>
+                                        <tooltip>
+                                            <Tooltip style="-fx-show-delay: 0.2s;" text="Log Out" />
+                                        </tooltip>
+                                    </Button>
+                                </children>
                                 <VBox.margin>
                                     <Insets left="10.0" top="10.0" />
                                 </VBox.margin>
-                            </Button>
+                            </HBox>
                             <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0">
                                 <children>
                                     <Text fill="#d9d9d9" strokeType="OUTSIDE" strokeWidth="0.0" text="Library ECE">

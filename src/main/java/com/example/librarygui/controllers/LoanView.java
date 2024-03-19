@@ -38,8 +38,10 @@ public class LoanView extends Controller{
     }
 
     public void returnBook() {
-        if(Banner.showConfirmationDialog("Return Book", "Are you sure you want to return this book?") && library.isAdmin()) {
+        if(library.isAdmin() && Banner.showConfirmationDialog("Return Book", "Are you sure you want to return this book?") ) {
             library.loans.remove(highlightedObject);
+            ((Loan) highlightedObject).book.addCopy();
+            library.editBook(((Loan) highlightedObject).book.isbn, ((Loan) highlightedObject).book);
             Banner.showInformationDialog("Success", "Book returned successfully.\nPlease refresh the page to see the changes");
         }
     }

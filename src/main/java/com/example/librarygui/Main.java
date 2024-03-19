@@ -34,6 +34,7 @@ public class Main extends Application {
         library.saveBooks();
         library.saveCategories();
         library.saveLoans();
+        library.saveRatings();
     }
 
     public static void loadFXML(String fxmlPath) {
