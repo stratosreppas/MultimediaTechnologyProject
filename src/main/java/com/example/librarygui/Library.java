@@ -425,10 +425,14 @@ public class Library {
     public boolean removeUser(User user) {
             if (users != null && userExists(user.getUsername())) {
 
-                for (Admin a : admins) {
-                    if (a.getUsername().equals(user.getUsername())) {
-                        admins.remove(a);
+                List<Admin> delete_Admins = new ArrayList<>();
+                for (Admin admin : getAdmins()) {
+                    if (admin.getUsername().equals(user.getUsername())) {
+                        delete_Admins.add(admin);
                     }
+                }
+                for(Admin a : delete_Admins){
+                    if(a!=null) admins.remove(a);
                 }
 
 
